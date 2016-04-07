@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@using System.Collections
+@using System.Web.Mvc
+
+
+<form id="home" class="form-horizontal" role="form">
+    @Html.AntiForgeryToken()
+    @InputExtensions.Hidden(Html, "pages", 1)
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-md-1">
+            <label class="control-label">Race</label>
+        </div>
+        <div class="col-md-11 left">
+            @Html.DropDownList("ddlRaces", (IEnumerable<SelectListItem>)ViewBag.Races,
+                new { @id = "ddlRaces", @class = "form-control", @onchange = "onChange()" })
+        </div>
+    </div>
+</form>
+
+<br />
+
+<div id="people_list">
+
+</div>
+
+<div class="form-horizontal row">
+    <div class="btn-group pull-right">
+        <button class="btn smaller-120" style="background-color:lightgreen" type="button" onclick="showMore()" id="show_more">Show More</button>
+        <button class="btn smaller-120 btn-grey" type="button" onclick="showAll()" id="show_all">Show All</button>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+
+    $(function () {
+        refreshList();
+    });
+
+    
+    function refreshList() {
+        var raceId = $("#ddlRaces option:selected").val();
+
+        var jsonData = {
+            raceId: raceId,
+            pages: $("#pages").val(),
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+        };
+
+        startSpinner();
+
+        $.ajax({
+            url: '@Url.Action("GetPeopleList", "Home")',
+            type: "post",
+            data: jsonData,
+            success: function (result) {
+                $("#people_list").html(result);
+            },
+            error: function () { },
+            complete: function () {
+                window.stopSpinner();
+            }
+        });
+    }
+
+    function onChange() {
+        // reset page count
+        $("#pages").val(1);
+
+        refreshList();
+    }
+
+    function showMore() {
+        var pages = parseInt($("#pages").val()) || 0;
+
+        pages++;
+        $("#pages").val(pages);
+
+        refreshList();
+    }
+
+    function showAll() {
+        $("#pages").val(0);
+        refreshList();
+    }
+</script>
+

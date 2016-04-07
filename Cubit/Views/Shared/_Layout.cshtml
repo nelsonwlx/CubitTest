@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Nelson Wu</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        #spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 2000;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Cubit Test", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    <div id="spinner"></div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @RenderSection("scripts", required: false)
+
+    <script src="~/Scripts/spin.min.js"></script>
+    <script type="text/javascript">
+        // Spinner settings
+        var opts = {
+            lines: 12,      // The number of lines to draw
+            length: 7,     // The length of each line
+            width: 4,       // The line thickness
+            radius: 10,     // The radius of the inner circle
+            corners: 1,     // Corner roundness (0..1)
+            rotate: 0,      // The rotation offset
+            direction: 1,   // 1: clockwise, -1: counterclockwise
+            color: '#000',  // #rgb or #rrggbb
+            speed: 0.8,     // Rounds per second
+            trail: 60,      // Afterglow percentage
+            shadow: false,  // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            //className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9,    // The z-index (defaults to 2000000000)
+            top: 'auto',    // Top position relative to parent in px
+            left: 'auto'    // Left position relative to parent in px
+        };
+        var spinner = null;
+        var spinner_div = 0;
+
+        function startSpinner() {
+            spinner_div = $("#spinner").get(0);
+
+            if (spinner == null) {
+                spinner = new Spinner(opts).spin(spinner_div);
+            } else {
+                spinner.spin(spinner_div);
+            }
+        };
+
+        function stopSpinner() {
+            if (spinner) {
+                spinner.stop(spinner_div);
+            }
+        }
+    </script>
+</body>
+</html>
